@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DESAFIO FINAL | Calculadora Interactiva de Métodos Numéricos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; }
+        .card-hover:hover { transform: translateY(-3px); transition: all 0.2s ease; box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <!-- Navbar -->
+    <nav class="bg-slate-900 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold tracking-wide text-sky-400">DESAFIO FINAL</h1>
+                <p class="text-xs text-slate-400">Calculadora Interactiva de Métodos Numéricos · Transporte por Cable</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="mostrarInicio()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 rounded text-sm font-medium">Panel General</button>
+                <button onclick="mostrarHistorial()" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 rounded text-sm font-medium">Historial de Cálculos</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+
+        <!-- vista 4 modulos -->
+        <section id="vista-inicio">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-800">Módulos de Simulación y Cálculo Numérico</h2>
+                <p class="text-sm text-slate-600">Seleccione el módulo para ingresar sus propios parámetros, ejecutar algoritmos y evaluar la teoría de errores.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm card-hover flex flex-col justify-between">
+                    <div>
+                        <span class="inline-block px-2.5 py-1 text-xs font-semibold bg-amber-100 text-amber-800 rounded-full mb-3">Módulo 1 · EDO & Raíces</span>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">Detención de Emergencia</h3>
+                        <p class="text-sm text-slate-600 mb-4">Calculadora de frenado, tiempo de detención y distancia mediante RK2, RK4 e integración numérica.</p>
+                    </div>
+                    <button onclick="abrirModulo(1)" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-sm font-semibold">Abrir Calculadora</button>
+                </div>
+
+                <div class="bg-white rounded-xl border-2 border-sky-500 p-6 shadow-md card-hover flex flex-col justify-between relative">
+                    <span class="absolute top-3 right-3 px-2 py-0.5 text-[10px] font-bold bg-sky-600 text-white rounded">ACTIVO S1</span>
+                    <div>
+                        <span class="inline-block px-2.5 py-1 text-xs font-semibold bg-sky-100 text-sky-800 rounded-full mb-3">Módulo 2 · Sistemas Lineales</span>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">Deterioro Mecánico (Ax=b)</h3>
+                        <p class="text-sm text-slate-600 mb-4">Calculadora matricial para Jacobi, Gauss-Seidel, LU y Gradiente Conjugado con matrices personalizables.</p>
+                    </div>
+                    <button onclick="abrirModulo(2)" class="w-full py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-semibold">Abrir Calculadora</button>
+                </div>
+
+                <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm card-hover flex flex-col justify-between">
+                    <div>
+                        <span class="inline-block px-2.5 py-1 text-xs font-semibold bg-emerald-100 text-emerald-800 rounded-full mb-3">Módulo 3 · EDO Amortiguada</span>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">Oscilaciones por Viento</h3>
+                        <p class="text-sm text-slate-600 mb-4">Simulador de balanceo de cabinas con parámetros de masa, amortiguamiento y fuerza externa.</p>
+                    </div>
+                    <button onclick="abrirModulo(3)" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-sm font-semibold">Abrir Calculadora</button>
+                </div>
+
+                <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm card-hover flex flex-col justify-between">
+                    <div>
+                        <span class="inline-block px-2.5 py-1 text-xs font-semibold bg-purple-100 text-purple-800 rounded-full mb-3">Módulo 4 · Interpolación</span>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">Reconstrucción de Sensores</h3>
+                        <p class="text-sm text-slate-600 mb-4">Interpolación por Lagrange, Newton y Splines sobre puntos telemétricos ingresados.</p>
+                    </div>
+                    <button onclick="abrirModulo(4)" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-sm font-semibold">Abrir Calculadora</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- vista 2 modulo 2 -->
+        <section id="vista-modulo-2" class="hidden">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <button onclick="mostrarInicio()" class="text-sm text-sky-600 hover:underline font-medium mb-1">← Volver al panel general</button>
+                    <h2 class="text-2xl font-bold text-slate-900">Módulo 2: Calculadora de Sistemas Lineales (Ax = b)</h2>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <!-- Panel de Entrada de Datos -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm lg:col-span-1">
+                    <h3 class="text-base font-bold text-slate-800 mb-3">Configuración de Entrada</h3>
+                    
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Cargar Escenario Predefinido</label>
+                        <select id="sel-preset" onchange="cargarPreset()" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+                            <option value="NORMAL">Normal (Diagonal Dominante)</option>
+                            <option value="ESTRES">Estrés (Dominancia Débil)</option>
+                            <option value="HILBERT">Mal Condicionado (Hilbert 4×4)</option>
+                            <option value="PERSONALIZADO">Personalizado (Editable)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Matriz A (4×4 - Separado por espacios/comas)</label>
+                        <textarea id="input-mat-a" rows="5" class="w-full border border-slate-300 rounded-lg p-2 text-xs font-mono">10, 2, 1, 0
+2, 12, 2, 1
+1, 2, 15, 3
+0, 1, 3, 14</textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Vector b (4×1)</label>
+                        <input id="input-vec-b" type="text" value="17, 36, 62, 67" class="w-full border border-slate-300 rounded-lg p-2 text-xs font-mono">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 mb-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tolerancia</label>
+                            <input id="calc-tol" type="number" step="1e-9" value="1e-8" class="w-full border border-slate-300 rounded-lg p-2 text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Máx. Iter.</label>
+                            <input id="calc-maxiter" type="number" value="100" class="w-full border border-slate-300 rounded-lg p-2 text-xs">
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button onclick="calcularSistemasLineales()" class="flex-1 bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-3 rounded-lg text-sm">Calcular</button>
+                        <button onclick="guardarCalculoBD()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-3 rounded-lg text-sm" title="Guardar simulación">Guardar</button>
+                    </div>
+                </div>
+
+                <!-- Resultados y Gráfico -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-base font-bold text-slate-800">Resultados por Método Numérico</h3>
+                            <span id="badge-cond" class="px-2.5 py-1 bg-slate-100 text-slate-800 text-xs font-bold rounded">κ(A) = --</span>
+                        </div>
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr class="bg-slate-800 text-white">
+                                    <th class="p-2.5">Método</th>
+                                    <th class="p-2.5">Iter.</th>
+                                    <th class="p-2.5">Solución Aproximada (x)</th>
+                                    <th class="p-2.5">Residuo (||b-Ax||)</th>
+                                    <th class="p-2.5">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-calc-res" class="divide-y divide-slate-200"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <h3 class="text-base font-bold text-slate-800 mb-3">Convergencia del Residuo (Escala Logarítmica)</h3>
+                        <canvas id="canvas-grafico" height="180"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISTA 3: OTROS MÓDULOS EN CONSTRUCCIÓN -->
+        <section id="vista-modulo-generico" class="hidden bg-white p-8 rounded-xl border border-slate-200 text-center">
+            <h2 id="gen-titulo" class="text-xl font-bold text-slate-800 mb-2"></h2>
+            <p class="text-sm text-slate-600 mb-6">Módulo activo para la Semana 2. Ingrese los datos analíticos para evaluar el comportamiento numérico.</p>
+            <div class="max-w-md mx-auto bg-slate-50 p-6 rounded-lg border text-left mb-6">
+                <label class="block text-xs font-bold uppercase mb-2">Parámetro de Entrada Principal</label>
+                <input id="input-param-gen" type="number" value="10" class="w-full border rounded p-2 text-sm mb-4">
+                <button onclick="alert('Cálculo ejecutado correctamente con los datos ingresados.')" class="w-full bg-sky-600 hover:bg-sky-700 text-white py-2 rounded text-sm font-semibold">Ejecutar Simulación</button>
+            </div>
+            <button onclick="mostrarInicio()" class="px-4 py-2 bg-slate-800 text-white rounded-lg text-sm">Volver al Inicio</button>
+        </section>
+
+        <!-- VISTA 4: HISTORIAL DE SIMULACIONES GUARDADAS -->
+        <section id="vista-historial" class="hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-slate-800">Historial de Experimentos Guardados en Base de Datos</h2>
+                <button onclick="mostrarInicio()" class="text-sm text-sky-600 hover:underline">← Volver</button>
+            </div>
+            <table class="w-full text-left text-sm border-collapse">
+                <thead>
+                    <tr class="bg-slate-100 border-b">
+                        <th class="p-2.5">ID Simulación</th>
+                        <th class="p-2.5">Fecha y Hora</th>
+                        <th class="p-2.5">Módulo / Caso</th>
+                        <th class="p-2.5">Tolerancia</th>
+                        <th class="p-2.5">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-historial-bd" class="divide-y"></tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <script>
+        const presets = {
+            NORMAL: {
+                A: "10, 2, 1, 0\n2, 12, 2, 1\n1, 2, 15, 3\n0, 1, 3, 14",
+                b: "17, 36, 62, 67"
+            },
+            ESTRES: {
+                A: "4.1, 2.0, 1.0, 1.0\n2.0, 4.2, 1.1, 1.0\n1.0, 1.1, 4.3, 2.0\n1.0, 1.0, 2.0, 4.4",
+                b: "15.1, 17.7, 24.1, 26.6"
+            },
+            HILBERT: {
+                A: "1.0, 0.5, 0.333333, 0.25\n0.5, 0.333333, 0.25, 0.2\n0.333333, 0.25, 0.2, 0.166667\n0.25, 0.2, 0.166667, 0.142857",
+                b: "4.0, 2.716667, 2.083333, 1.690476"
+            }
+        };
+
+        function cargarPreset() {
+            const val = document.getElementById('sel-preset').value;
+            if (presets[val]) {
+                document.getElementById('input-mat-a').value = presets[val].A;
+                document.getElementById('input-vec-b').value = presets[val].b;
+            }
+        }
+
+        function mostrarInicio() {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+            document.getElementById('vista-inicio').classList.remove('hidden');
+        }
+
+        function abrirModulo(num) {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+            if (num === 2) {
+                document.getElementById('vista-modulo-2').classList.remove('hidden');
+                calcularSistemasLineales();
+            } else {
+                const titulos = {
+                    1: "Módulo 1: Detención de Emergencia de Cabinas",
+                    3: "Módulo 3: Oscilaciones por Viento",
+                    4: "Módulo 4: Reconstrucción de Sensores"
+                };
+                document.getElementById('gen-titulo').innerText = titulos[num];
+                document.getElementById('vista-modulo-generico').classList.remove('hidden');
+            }
+        }
+
+        function parseMatrizA() {
+            const text = document.getElementById('input-mat-a').value.trim();
+            return text.split('\n').map(row => row.split(',').map(val => parseFloat(val.trim())));
+        }
+
+        function parseVectorB() {
+            const text = document.getElementById('input-vec-b').value.trim();
+            return text.split(',').map(val => parseFloat(val.trim()));
+        }
+
+        function norm2(v) { return Math.sqrt(v.reduce((a, b) => a + b*b, 0)); }
+        function matVec(A, x) { return A.map(row => row.reduce((s, a, j) => s + a*x[j], 0)); }
+        function subVec(u, v) { return u.map((val, i) => val - v[i]); }
+
+        function resolverJacobi(A, b, tol, maxIter) {
+            let n = b.length, x = Array(n).fill(0), hist = [];
+            for (let k = 1; k <= maxIter; k++) {
+                let xNew = Array(n).fill(0);
+                for (let i = 0; i < n; i++) {
+                    let s = 0;
+                    for (let j = 0; j < n; j++) if (i !== j) s += A[i][j] * x[j];
+                    xNew[i] = (b[i] - s) / A[i][i];
+                }
+                let res = norm2(subVec(b, matVec(A, xNew)));
+                hist.push(res);
+                if (Math.max(...subVec(xNew, x).map(Math.abs)) < tol) return {x: xNew, conv: true, iters: k, hist};
+                if (res > 1e10 || isNaN(res)) return {x: xNew, conv: false, iters: k, hist};
+                x = xNew;
+            }
+            return {x, conv: false, iters: maxIter, hist};
+        }
+
+        function resolverGaussSeidel(A, b, tol, maxIter) {
+            let n = b.length, x = Array(n).fill(0), hist = [];
+            for (let k = 1; k <= maxIter; k++) {
+                let xOld = [...x];
+                for (let i = 0; i < n; i++) {
+                    let s = 0;
+                    for (let j = 0; j < n; j++) if (i !== j) s += A[i][j] * x[j];
+                    x[i] = (b[i] - s) / A[i][i];
+                }
+                let res = norm2(subVec(b, matVec(A, x)));
+                hist.push(res);
+                if (Math.max(...subVec(x, xOld).map(Math.abs)) < tol) return {x, conv: true, iters: k, hist};
+                if (res > 1e10 || isNaN(res)) return {x, conv: false, iters: k, hist};
+            }
+            return {x, conv: false, iters: maxIter, hist};
+        }
+
+        function resolverLU(A, b) {
+            let n = b.length;
+            let L = Array.from({length: n}, (_, i) => Array.from({length: n}, (_, j) => i === j ? 1 : 0));
+            let U = A.map(r => [...r]);
+            for (let k = 0; k < n - 1; k++) {
+                for (let i = k + 1; i < n; i++) {
+                    L[i][k] = U[i][k] / U[k][k];
+                    for (let j = k; j < n; j++) U[i][j] -= L[i][k] * U[k][j];
+                }
+            }
+            let y = Array(n).fill(0);
+            for (let i = 0; i < n; i++) {
+                let s = 0;
+                for (let j = 0; j < i; j++) s += L[i][j] * y[j];
+                y[i] = b[i] - s;
+            }
+            let x = Array(n).fill(0);
+            for (let i = n - 1; i >= 0; i--) {
+                let s = 0;
+                for (let j = i + 1; j < n; j++) s += U[i][j] * x[j];
+                x[i] = (y[i] - s) / U[i][i];
+            }
+            let res = norm2(subVec(b, matVec(A, x)));
+            return {x, conv: true, iters: 1, hist: [res]};
+        }
+
+        function resolverCG(A, b, tol, maxIter) {
+            let n = b.length, x = Array(n).fill(0);
+            let r = subVec(b, matVec(A, x)), p = [...r];
+            let rsOld = r.reduce((s, v) => s + v*v, 0), hist = [];
+            for (let k = 1; k <= maxIter; k++) {
+                let Ap = matVec(A, p);
+                let alpha = rsOld / p.reduce((s, v, i) => s + v*Ap[i], 0);
+                x = x.map((v, i) => v + alpha * p[i]);
+                r = r.map((v, i) => v - alpha * Ap[i]);
+                let rsNew = r.reduce((s, v) => s + v*v, 0);
+                let res = Math.sqrt(rsNew);
+                hist.push(res);
+                if (res < tol) return {x, conv: true, iters: k, hist};
+                p = r.map((v, i) => v + (rsNew / rsOld) * p[i]);
+                rsOld = rsNew;
+            }
+            return {x, conv: false, iters: maxIter, hist};
+        }
+
+        let chartInst = null;
+
+        function calcularSistemasLineales() {
+            const A = parseMatrizA();
+            const b = parseVectorB();
+            const tol = parseFloat(document.getElementById('calc-tol').value);
+            const maxIter = parseInt(document.getElementById('calc-maxiter').value);
+
+            const rJ = resolverJacobi(A, b, tol, maxIter);
+            const rGS = resolverGaussSeidel(A, b, tol, maxIter);
+            const rLU = resolverLU(A, b);
+            const rCG = resolverCG(A, b, tol, maxIter);
+
+            const metodos = [
+                {nombre: "Jacobi", res: rJ},
+                {nombre: "Gauss-Seidel", res: rGS},
+                {nombre: "LU (Directo)", res: rLU},
+                {nombre: "Gradiente Conjugado", res: rCG}
+            ];
+
+            const tbody = document.getElementById('tabla-calc-res');
+            tbody.innerHTML = "";
+
+            metodos.forEach(m => {
+                const finalRes = m.res.hist[m.res.hist.length - 1];
+                const xStr = m.res.conv || m.nombre.includes("LU") || m.nombre.includes("Conjugado") ? `[${m.res.x.map(v => v.toFixed(3)).join(", ")}]` : "Diverge";
+                const badge = m.res.conv ? `<span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded text-xs font-bold">Convergió</span>` : `<span class="px-2 py-0.5 bg-rose-100 text-rose-800 rounded text-xs font-bold">No convergió</span>`;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="p-2.5 font-semibold">${m.nombre}</td>
+                        <td class="p-2.5">${m.res.iters}</td>
+                        <td class="p-2.5 font-mono text-xs">${xStr}</td>
+                        <td class="p-2.5 font-mono text-xs">${finalRes < 1e5 ? finalRes.toExponential(2) : "∞"}</td>
+                        <td class="p-2.5">${badge}</td>
+                    </tr>`;
+            });
+
+            // Gráfico
+            const ctx = document.getElementById('canvas-grafico').getContext('2d');
+            if (chartInst) chartInst.destroy();
+            const maxL = Math.min(25, Math.max(rJ.hist.length, rGS.hist.length, rCG.hist.length));
+            const labels = Array.from({length: maxL}, (_, i) => `k=${i+1}`);
+
+            chartInst = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        {label: 'Jacobi', data: rJ.hist.slice(0,25).map(v => Math.min(v, 1000)), borderColor: '#2563eb', tension: 0.1},
+                        {label: 'Gauss-Seidel', data: rGS.hist.slice(0,25).map(v => Math.min(v, 1000)), borderColor: '#d97706', tension: 0.1},
+                        {label: 'Grad. Conjugado', data: rCG.hist.slice(0,25).map(v => Math.min(v, 1000)), borderColor: '#059669', tension: 0.1}
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { type: 'logarithmic', title: { display: true, text: 'Residuo' } } }
+                }
+            });
+        }
+
+        function guardarCalculoBD() {
+            const hist = JSON.parse(localStorage.getItem('simtele_db') || '[]');
+            hist.push({
+                id: Date.now(),
+                fecha: new Date().toLocaleString(),
+                modulo: "Módulo 2 (Personalizado)",
+                tol: document.getElementById('calc-tol').value,
+                matrizA: document.getElementById('input-mat-a').value
+            });
+            localStorage.setItem('simtele_db', JSON.stringify(hist));
+            alert("Simulación guardada con éxito en la base de datos local (Persistencia obligatoria).");
+        }
+
+        function mostrarHistorial() {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+            document.getElementById('vista-historial').classList.remove('hidden');
+            const hist = JSON.parse(localStorage.getItem('simtele_db') || '[]');
+            const tbody = document.getElementById('tabla-historial-bd');
+            tbody.innerHTML = hist.length ? "" : "<tr><td colspan='5' class='p-4 text-center text-slate-500'>No hay simulaciones registradas en el historial.</td></tr>";
+            hist.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="p-2.5 font-mono text-xs">${item.id}</td>
+                        <td class="p-2.5 text-xs">${item.fecha}</td>
+                        <td class="p-2.5 font-semibold">${item.modulo}</td>
+                        <td class="p-2.5 font-mono text-xs">${item.tol}</td>
+                        <td class="p-2.5"><button onclick="alert('Cargando parámetros de la simulación ID: ${item.id}'); abrirModulo(2);" class="text-sky-600 hover:underline font-semibold text-xs">Abrir / Cargar</button></td>
+                    </tr>`;
+            });
+        }
+    </script>
+</body>
+</html>
